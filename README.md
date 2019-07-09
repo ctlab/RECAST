@@ -28,16 +28,18 @@ Here is a bash script showing a typical usage of simple reads classifier:
     -d <donor_1.fasta donor_2.fasta> \
     -b <before_1.fasta before_2.fasta> \
     -a <after_1.fasta after_2.fasta> \
+    -found 90 \
     -w <workDir> \
     -o <outDir>
 ~~~
 
-* `-k` --- the size of k-mer used in de Bruijn graph.
-* `-d` --- two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-b` --- two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-a` --- two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-w` --- directory with intermediate working files
-* `-o` --- directory for final categories of reads
+* `-k` — the size of k-mer used in de Bruijn graph.
+* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
+* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
+* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
+* `-found` — Minimum coverage breadth for reads from class found [0 - 100 %].
+* `-w` — directory with intermediate working files
+* `-o` — directory for final categories of reads
 
 #### Output description
 
@@ -45,33 +47,33 @@ After the end of the analysis, the results can be found in the folder specified 
 
 * Reads from donor metagenome are split into two categories:
 
-  * `settle_[1|2|s].fastq` --- reads which were found in post-FMT recipient metagenome
+  * `settle_[1|2|s].fastq` — reads which were found in post-FMT recipient metagenome
 
-  * `not_settle_[1|2|s].fastq` --- reads which were not found in post-FMT recipient metagenome
+  * `not_settle_[1|2|s].fastq` — reads which were not found in post-FMT recipient metagenome
 
 * Reads from pre-FMT recipient metagenome are split into two categories:
 
-  * `stay_[1|2|s].fastq` --- reads which were found in post-FMT recipient metagenome
+  * `stay_[1|2|s].fastq` — reads which were found in post-FMT recipient metagenome
 
-  * `gone_[1|2|s].fastq` --- reads which were not found in post-FMT recipient metagenome
+  * `gone_[1|2|s].fastq` — reads which were not found in post-FMT recipient metagenome
 
 * Reads from post-FMT recipient metagenome are split into four categories:
 
-  * `came_from_both[1|2|s].fastq` --- reads which were found both in donor and pre-FMT recipient metagenome
+  * `came_from_both_[1|2|s].fastq` — reads which were found both in donor and pre-FMT recipient metagenome
 
-  * `came_from_donor[1|2|s].fastq` --- reads which were found only in donor metagenome
+  * `came_from_donor_[1|2|s].fastq` — reads which were found only in donor metagenome
 
-  * `came_from_before_[1|2|s].fastq` --- reads which were found only in pre-FMT recipient metagenome
+  * `came_from_before_[1|2|s].fastq` — reads which were found only in pre-FMT recipient metagenome
 
-  * `came_itself_[1|2|s].fastq` --- reads which were not found neither in donor metagenome nor in pre-FMT recipient metagenome
+  * `came_itself_[1|2|s].fastq` — reads which were not found neither in donor metagenome nor in pre-FMT recipient metagenome
 
 
-### Careful reads classifier
+### Accurate reads classifier
 
-Careful reads classifier uses soft splitting criteria providing a user with thirteen categories of reads.
+Accurate reads classifier uses soft splitting criteria providing a user with thirteen categories of reads.
 It also utilizes two values of `k` for building de Bruijn graph, which makes an algorithm be more accurate.
 
-Here is a bash script showing a typical usage of careful reads classifier:
+Here is a bash script showing a typical usage of accurate reads classifier:
 
 ~~~
 ./triple_reads_classifier.sh -k 31 \
@@ -79,17 +81,21 @@ Here is a bash script showing a typical usage of careful reads classifier:
     -d <donor_1.fasta donor_2.fasta> \
     -b <before_1.fasta before_2.fasta> \
     -a <after_1.fasta after_2.fasta> \
+    -found 90 \
+    -half 40 \
     -w <workDir> \
     -o <outDir>
 ~~~
 
-* `-k` --- the size of k-mer used in de Bruijn graph.
-* `-k2` --- the second size of k-mer used in de Bruijn graph. k2 > k
-* `-d` --- two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-b` --- two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-a` --- two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-w` --- directory with intermediate working files
-* `-o` --- directory for final categories of reads
+* `-k` — the size of k-mer used in de Bruijn graph.
+* `-k2` — the second size of k-mer used in de Bruijn graph. k2 > k
+* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
+* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
+* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
+* `-found` — Minimum coverage breadth for reads from class found [0 - 100 %].
+* `-half` — Minimum coverage breadth for reads from class half-found [0 - 100 %].
+* `-w` — directory with intermediate working files
+* `-o` — directory for final categories of reads
 
 #### Output description
 
@@ -97,32 +103,32 @@ After the end of the analysis, the results can be found in the folder specified 
 
 * Reads from donor metagenome are split into three categories:
 
-  * `settle_[1|2|s].fastq` --- reads which were found in post-FMT recipient metagenome
+  * `settle_[1|2|s].fastq` — reads which were found in post-FMT recipient metagenome
 
-  * `half_settle_[1|2|s].fastq` --- reads close to which were found in post-FMT recipient metagenome
+  * `half_settle_[1|2|s].fastq` — reads close to which were found in post-FMT recipient metagenome
 
-  * `not_settle_[1|2|s].fastq` --- reads which were not found in post-FMT recipient metagenome
+  * `not_settle_[1|2|s].fastq` — reads which were not found in post-FMT recipient metagenome
 
 * Reads from pre-FMT recipient metagenome are split into three categories:
 
-  * `stay_[1|2|s].fastq` --- reads which were found in post-FMT recipient metagenome
+  * `stay_[1|2|s].fastq` — reads which were found in post-FMT recipient metagenome
 
-  * `half_stay_[1|2|s].fastq` --- reads close to which were found in post-FMT recipient metagenome
+  * `half_stay_[1|2|s].fastq` — reads close to which were found in post-FMT recipient metagenome
 
-  * `gone_[1|2|s].fastq` --- reads which were not found in post-FMT recipient metagenome
+  * `gone_[1|2|s].fastq` — reads which were not found in post-FMT recipient metagenome
 
 * Reads from post-FMT recipient metagenome are split into seven categories:
 
-  * `came_from_both[1|2|s].fastq` --- reads which were found both in donor and pre-FMT recipient metagenome
+  * `came_from_both_[1|2|s].fastq` — reads which were found both in donor and pre-FMT recipient metagenome
 
-  * `came_from_donor[1|2|s].fastq` --- reads which were found only in donor metagenome
+  * `came_from_donor_[1|2|s].fastq` — reads which were found only in donor metagenome
 
-  * `came_from_before_[1|2|s].fastq` --- reads which were found only in pre-FMT recipient metagenome
+  * `came_from_before_[1|2|s].fastq` — reads which were found only in pre-FMT recipient metagenome
 
-  * `came_itself_[1|2|s].fastq` --- reads which were not found neither in donor metagenome nor in pre-FMT recipient metagenome
+  * `came_itself_[1|2|s].fastq` — reads which were not found neither in donor metagenome nor in pre-FMT recipient metagenome
 
-  * `strain_from_donor[1|2|s].fastq` --- reads which were found in donor metagenome and close to which were found in pre-FMT recipient metagenome
+  * `strain_from_donor_[1|2|s].fastq` — reads which were found in donor metagenome and close to which were found in pre-FMT recipient metagenome
 
-  * `strain_from_before_[1|2|s].fastq` --- reads which were found in pre-FMT recipient metagenome and close to which were found in donor metagenome
+  * `strain_from_before_[1|2|s].fastq` — reads which were found in pre-FMT recipient metagenome and close to which were found in donor metagenome
 
-  * `strain_itself_[1|2|s].fastq` --- reads close to which were found both in donor and pre-FMT recipient metagenome
+  * `strain_itself_[1|2|s].fastq` — reads close to which were found both in donor and pre-FMT recipient metagenome
