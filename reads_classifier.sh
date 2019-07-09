@@ -42,7 +42,6 @@ case $key in
     -corr|--correction)
     corr=true
     shift # past argument
-    shift # past value
     ;;
     -m|--memory)
     m="$2"
@@ -62,10 +61,13 @@ case $key in
     -v|--verbose)
     v=true
     shift # past argument
-    shift # past value
     ;;
     -interval95|--interval95)
     interval95=true
+    shift
+    ;;
+    -found|--found-threshold)
+    foundThresh="$2"
     shift
     shift
     ;;
@@ -101,6 +103,9 @@ if [[ $v ]]; then
 fi
 if [[ $interval95 ]]; then
     cmd+="-interval95 "
+fi
+if [[ $foundThresh ]]; then
+    cmd+="-found $foundThresh "
 fi
 
 cmd1=$cmd
