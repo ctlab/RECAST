@@ -88,7 +88,7 @@ fi
 if [[ $v ]]; then
     cmd+="-v "
 fi
-cmd+="-w $w -o $o"
+cmd+="-w $w -o $o "
 if [[ ${d1} ]]; then
     cmd+="-donor ${d1} ${d2} "
 fi
