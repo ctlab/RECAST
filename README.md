@@ -1,6 +1,17 @@
 The purpose of these tools is to analyse metagenome time series by searching the common parts from one metagenome into another.
 The implementation is based on [MetaCherchant](https://github.com/ivartb/metacherchant) source code.
 
+## Table of contents
+<!--ts-->
+  * [Installation](#installation)
+  * [Usage example](#usage-example)
+    * [Simple reads classifier](#simple-reads-classifier)
+      * [Output](#output-description)
+      * [Results visualisation](#results-visualisation)
+    * [Accurate reads classifier](#accurate-reads-classifier)
+      * [Output](#output-description-1) 
+<!--te-->
+
 ## Installation
 
 You need to have JRE version 1.8 or higher installed, file `metacherchant.jar` and either of
@@ -30,16 +41,26 @@ Here is a bash script showing a typical usage of simple reads classifier:
     -a <after_1.fasta after_2.fasta> \
     -found 90 \
     -w <workDir> \
-    -o <outDir>
+    -o <outDir> \
+    -corr \
+    -m <mem> \
+    -p <proc> \
+    -interval95 \
+    -v
 ~~~
 
-* `-k` — the size of k-mer used in de Bruijn graph.
-* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-found` — Minimum coverage breadth for reads from class found [0 - 100 %].
-* `-w` — directory with intermediate working files
-* `-o` — directory for final categories of reads
+* `-k` — the size of k-mer used in de Bruijn graph
+* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-found` — Minimum coverage breadth for reads from class found \[0 - 100 %\] (optional, default: 90)
+* `-w` — directory with intermediate working files (optional, default: workDir)
+* `-o` — directory for final categories of reads (optional, default: outDir)
+* `-corr` — do replacement of nucleotide in read with one low quality position (optional)
+* `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
+* `-p` — available processors (optional, default: all)
+* `-interval95` — set the interval width to probability 0.95 (optional)
+* `-v` — enable debug output (optional)
 
 #### Output description
 
@@ -67,6 +88,68 @@ After the end of the analysis, the results can be found in the folder specified 
 
   * `came_itself_[1|2|s].fastq` — reads which were not found neither in donor metagenome nor in pre-FMT recipient metagenome
 
+### Results visualisation
+
+One can get the visual representation of classified reads mapped back on the de Bruijn graphs in tool [Bandage](https://rrwick.github.io/Bandage/). Run `fmt_visualiser.sh` script as in the example below:
+
+~~~
+./reads_classifier.sh -k 31 \
+    -d <donor_1.fasta donor_2.fasta> \
+    -b <before_1.fasta before_2.fasta> \
+    -a <after_1.fasta after_2.fasta> \
+    -i <inputDir> \
+    -w <workDir> \
+    -o <outDir> \
+    -m <mem> \
+    -p <proc> \
+    -v
+~~~
+
+* `-k` — the size of k-mer used in de Bruijn graph
+* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-i` — directory containing output of reads_classifier.sh FMT classification script
+* `-w` — directory with intermediate working files (optional, default: workDir)
+* `-o` — directory for final categories of reads (optional, default: outDir)
+* `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
+* `-p` — available processors (optional, default: all)
+* `-v` — enable debug output (optional)
+
+In the output folder (specified by `-o`) you can find six files:
+
+* `*.fasta` — three fasta files containing merged nodes for graphs of donor, pre-FMT and post-FMT recipient with information about neighbors in description line
+
+* `*.gfa` — three files of donor, pre-FMT and post-FMT graphs in [GFA format](https://github.com/GFA-spec/GFA-spec/blob/master/GFA-spec.md) accepted by Bandage as input files. Follow the instructions of Bandage tool to get the colorful visualisation of classification results.
+
+Donor graph is colored with three colors:
+
+![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `settle`
+
+![](https://via.placeholder.com/15/0000ff?text=+) blue nodes — parts of graph, which classified as `not settle`
+
+![](https://via.placeholder.com/15/999999?text=+) grey nodes — parts of graph, which are covered by both categories
+
+Pre-FMT recipient graph is colored with three colors:
+
+![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `stay`
+
+![](https://via.placeholder.com/15/0000ff?text=+) blue nodes — parts of graph, which classified as `gone`
+
+![](https://via.placeholder.com/15/999999?text=+) grey nodes — parts of graph, which are covered by both categories
+
+Post-FMT recipient graph is colored with five colors:
+
+![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `came from both`
+
+![](https://via.placeholder.com/15/ff0000?text=+) red nodes — parts of graph, which classified as `came from donor`
+
+![](https://via.placeholder.com/15/0000ff?text=+) blue nodes — parts of graph, which classified as `came from before`
+
+![](https://via.placeholder.com/15/ffff00?text=+) yellow nodes — parts of graph, which classified as `came itself`
+
+![](https://via.placeholder.com/15/999999?text=+) grey nodes — parts of graph, which are covered by multiple categories
+
 
 ### Accurate reads classifier
 
@@ -84,18 +167,28 @@ Here is a bash script showing a typical usage of accurate reads classifier:
     -found 90 \
     -half 40 \
     -w <workDir> \
-    -o <outDir>
+    -o <outDir> \
+    -corr \
+    -m <mem> \
+    -p <proc> \
+    -interval95 \
+    -v
 ~~~
 
-* `-k` — the size of k-mer used in de Bruijn graph.
+* `-k` — the size of k-mer used in de Bruijn graph
 * `-k2` — the second size of k-mer used in de Bruijn graph. k2 > k
-* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2.
-* `-found` — Minimum coverage breadth for reads from class found [0 - 100 %].
-* `-half` — Minimum coverage breadth for reads from class half-found [0 - 100 %].
-* `-w` — directory with intermediate working files
-* `-o` — directory for final categories of reads
+* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-found` — Minimum coverage breadth for reads from class found \[0 - 100 %\] (optional, default: 90)
+* `-half` — Minimum coverage breadth for reads from class half-found \[0 - 100 %\] (optional, default: 40)
+* `-w` — directory with intermediate working files (optional, default: workDir)
+* `-o` — directory for final categories of reads (optional, default: outDir)
+* `-corr` — do replacement of nucleotide in read with one low quality position (optional)
+* `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
+* `-p` — available processors (optional, default: all)
+* `-interval95` — set the interval width to probability 0.95 (optional)
+* `-v` — enable debug output (optional)
 
 #### Output description
 
