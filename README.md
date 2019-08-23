@@ -105,11 +105,11 @@ One can get the visual representation of classified reads mapped back on the de 
     -v
 ~~~
 
-* `-k` — the size of k-mer used in de Bruijn graph
-* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
-* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
-* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
-* `-i` — directory containing output of reads_classifier.sh FMT classification script
+* `-k` — the size of k-mer used in de Bruijn graph (**must** be the **same** as in `reads_classifier.sh`)
+* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2  (**must** be the **same** as in `reads_classifier.sh`)
+* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2  (**must** be the **same** as in `reads_classifier.sh`)
+* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2  (**must** be the **same** as in `reads_classifier.sh`)
+* `-i` — directory containing output of `reads_classifier.sh` FMT classification script
 * `-w` — directory with intermediate working files (optional, default: workDir)
 * `-o` — directory for final categories of reads (optional, default: outDir)
 * `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
@@ -122,7 +122,7 @@ In the output folder (specified by `-o`) you can find six files:
 
 * `*.gfa` — three files of donor, pre-FMT and post-FMT graphs in [GFA format](https://github.com/GFA-spec/GFA-spec/blob/master/GFA-spec.md) accepted by Bandage as input files. Follow the instructions of Bandage tool to get the colorful visualisation of classification results.
 
-Donor graph is colored with three colors:
+**Donor graph (`donor.gfa`)** is colored with three colors:
 
 ![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `settle`
 
@@ -130,7 +130,7 @@ Donor graph is colored with three colors:
 
 ![](https://via.placeholder.com/15/999999?text=+) grey nodes — parts of graph, which are covered by both categories
 
-Pre-FMT recipient graph is colored with three colors:
+**Pre-FMT recipient graph (`before.gfa`)** is colored with three colors:
 
 ![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `stay`
 
@@ -138,7 +138,7 @@ Pre-FMT recipient graph is colored with three colors:
 
 ![](https://via.placeholder.com/15/999999?text=+) grey nodes — parts of graph, which are covered by both categories
 
-Post-FMT recipient graph is colored with five colors:
+**Post-FMT recipient graph (`after.gfa`)** is colored with five colors:
 
 ![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `came from both`
 
