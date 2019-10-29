@@ -13,6 +13,11 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -ext|--ext)
+    ext="$2"
+    shift # past argument
+    shift # past value
+    ;;
     -d|--donor-files)
     d1="$2"
     d2="$3"
@@ -100,6 +105,9 @@ if [[ ${a1} ]]; then
 fi
 if [[ $i ]]; then
     cmd+="-i $i "
+fi
+if [[ ${ext} ]]; then
+    cmd+="-ext ${ext} "
 fi
 
 echo "$cmd"
