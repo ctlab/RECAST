@@ -93,7 +93,7 @@ After the end of the analysis, the results can be found in the folder specified 
 One can get the visual representation of classified reads mapped back on the de Bruijn graphs in tool [Bandage](https://rrwick.github.io/Bandage/). Run `fmt_visualiser.sh` script as in the example below:
 
 ~~~
-./reads_classifier.sh -k 31 \
+./fmt_visualiser.sh -k 31 \
     -d <donor_1.fasta donor_2.fasta> \
     -b <before_1.fasta before_2.fasta> \
     -a <after_1.fasta after_2.fasta> \
