@@ -80,7 +80,7 @@ cmd="java "
 if [[ $m ]]; then
     cmd+="-Xmx${m} -Xms${m} "
 fi
-cmd+="-jar metacherchant.jar -t fmt-visualiser "
+cmd+="-jar metacherchant.jar -t fmt-visualizer "
 if [[ $k ]]; then
     cmd+="-k $k "
 fi
