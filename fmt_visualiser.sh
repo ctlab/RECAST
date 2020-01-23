@@ -18,18 +18,19 @@ case $key in
     shift # past argument
     shift # past value
     ;;
-    -d|--donor-files)
-    d1="$2"
-    d2="$3"
+    -seq|--seq)
+    seq="$2"
     shift # past argument
-    shift # past value
     shift # past value
     ;;
-    -b|--before-files)
-    b1="$2"
-    b2="$3"
+    --maxkmers)
+    maxkmers="$2"
     shift # past argument
     shift # past value
+    ;;
+    --maxradius)
+    maxradius="$2"
+    shift # past argument
     shift # past value
     ;;
     -a|--after-files)
@@ -80,7 +81,7 @@ cmd="java "
 if [[ $m ]]; then
     cmd+="-Xmx${m} -Xms${m} "
 fi
-cmd+="-jar metacherchant.jar -t fmt-visualizer "
+cmd+="-jar metacherchant.jar -t recipient-visualiser "
 if [[ $k ]]; then
     cmd+="-k $k "
 fi
@@ -94,12 +95,6 @@ if [[ $v ]]; then
     cmd+="-v "
 fi
 cmd+="-w $w -o $o "
-if [[ ${d1} ]]; then
-    cmd+="-donor ${d1} ${d2} "
-fi
-if [[ ${b1} ]]; then
-    cmd+="-before ${b1} ${b2} "
-fi
 if [[ ${a1} ]]; then
     cmd+="-after ${a1} ${a2} "
 fi
@@ -109,12 +104,21 @@ fi
 if [[ ${ext} ]]; then
     cmd+="-ext ${ext} "
 fi
+if [[ ${seq} ]]; then
+    cmd+="--seq ${seq} "
+fi
+if [[ ${maxkmers} ]]; then
+    cmd+="--maxkmers ${maxkmers} "
+fi
+if [[ ${maxradius} ]]; then
+    cmd+="--maxradius ${maxradius} "
+fi
 
 echo "$cmd"
 $cmd
 if [[ $? -eq 0 ]]; then
     echo "SUCCESS"
 else
-    echo "error while after reads processing"
+    echo "error while visualising metagenome graph"
     exit -1
 fi
