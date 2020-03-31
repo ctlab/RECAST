@@ -20,6 +20,11 @@ case $key in
     shift # past value
     shift # past value
     ;;
+    -dk|--donor-kmers)
+    dk="$2"
+    shift
+    shift
+    ;;
     -b|--before-files)
     b1="$2"
     b2="$3"
@@ -27,12 +32,22 @@ case $key in
     shift # past value
     shift # past value
     ;;
+    -bk|--before-kmers)
+    bk="$2"
+    shift
+    shift
+    ;;
     -a|--after-files)
     a1="$2"
     a2="$3"
     shift # past argument
     shift # past value
     shift # past value
+    ;;
+    -ak|--after-kmers)
+    ak="$2"
+    shift
+    shift
     ;;
     -o|--output-dir)
     o="$2"
@@ -109,7 +124,9 @@ if [[ $foundThresh ]]; then
 fi
 
 cmd1=$cmd
-if [[ ${a1} ]]; then
+if [[ ${ak} ]]; then
+    cmd1+="-i ${ak} "
+elif [[ ${a1} ]]; then
     cmd1+="-i ${a1} ${a2} "
 fi
 if [[ ${d1} ]]; then
@@ -134,7 +151,9 @@ fi
 
 
 cmd2=$cmd
-if [[ ${a1} ]]; then
+if [[ ${ak} ]]; then
+    cmd2+="-i ${ak} "
+elif [[ ${a1} ]]; then
     cmd2+="-i ${a1} ${a2} "
 fi
 if [[ ${b1} ]]; then
@@ -158,7 +177,9 @@ else
 fi
 
 cmd3=$cmd
-if [[ ${d1} ]]; then
+if [[ ${dk} ]]; then
+    cmd3+="-i ${dk} "
+elif [[ ${d1} ]]; then
     cmd3+="-i ${d1} ${d2} "
 fi
 if [[ ${a1} ]]; then
@@ -187,7 +208,9 @@ echo $'@\r\n\r\n+\r\n' >> $w/3/reads_classifier/found_2.fastq
 done
 
 cmd4=$cmd
-if [[ ${d1} ]]; then
+if [[ ${bk} ]]; then
+    cmd4+="-i ${bk} "
+elif [[ ${b1} ]]; then
     cmd4+="-i ${b1} ${b2} "
 fi
 cmd4+="-r $w/3/reads_classifier/found_1.fastq $w/3/reads_classifier/found_2.fastq "
@@ -217,7 +240,9 @@ echo $'@\r\n\r\n+\r\n' >> $w/3/reads_classifier/not_found_2.fastq
 done
 
 cmd5=$cmd
-if [[ ${d1} ]]; then
+if [[ ${bk} ]]; then
+    cmd5+="-i ${bk} "
+elif [[ ${b1} ]]; then
     cmd5+="-i ${b1} ${b2} "
 fi
 cmd5+="-r $w/3/reads_classifier/not_found_1.fastq $w/3/reads_classifier/not_found_2.fastq "

@@ -25,6 +25,16 @@ case $key in
     shift # past value
     shift # past value
     ;;
+    -dk1|--donor-kmers-1)
+    dk1="$2"
+    shift
+    shift
+    ;;
+    -dk2|--donor-kmers-2)
+    dk2="$2"
+    shift
+    shift
+    ;;
     -b|--before-files)
     b1="$2"
     b2="$3"
@@ -32,12 +42,32 @@ case $key in
     shift # past value
     shift # past value
     ;;
+    -bk1|--before-kmers-1)
+    bk1="$2"
+    shift
+    shift
+    ;;
+    -bk2|--before-kmers-2)
+    bk2="$2"
+    shift
+    shift
+    ;;
     -a|--after-files)
     a1="$2"
     a2="$3"
     shift # past argument
     shift # past value
     shift # past value
+    ;;
+    -ak1|--after-kmers-1)
+    ak1="$2"
+    shift
+    shift
+    ;;
+    -ak2|--after-kmers-2)
+    ak2="$2"
+    shift
+    shift
     ;;
     -o|--output-dir)
     o="$2"
@@ -126,6 +156,12 @@ fi
 
 # Split donor reads
 cmd1=$cmd
+if [[ ${ak1} ]]; then
+    cmd1+="-ik1 ${ak1} "
+fi
+if [[ ${ak2} ]]; then
+    cmd1+="-ik2 ${ak2} "
+fi
 if [[ ${a1} ]]; then
     cmd1+="-i ${a1} ${a2} "
 fi
@@ -154,6 +190,12 @@ fi
 
 # Split before reads
 cmd2=$cmd
+if [[ ${ak1} ]]; then
+    cmd2+="-ik1 ${ak1} "
+fi
+if [[ ${ak2} ]]; then
+    cmd2+="-ik2 ${ak2} "
+fi
 if [[ ${a1} ]]; then
     cmd2+="-i ${a1} ${a2} "
 fi
@@ -182,6 +224,12 @@ fi
 
 # Align after reads on donor
 cmd3=$cmd
+if [[ ${dk1} ]]; then
+    cmd3+="-ik1 ${dk1} "
+fi
+if [[ ${dk2} ]]; then
+    cmd3+="-ik2 ${dk2} "
+fi
 if [[ ${d1} ]]; then
     cmd3+="-i ${d1} ${d2} "
 fi
@@ -211,7 +259,13 @@ echo $'@\r\n\r\n+\r\n' >> $w/3/reads_classifier/found_2.fastq
 done
 
 cmd4=$cmd
-if [[ ${d1} ]]; then
+if [[ ${bk1} ]]; then
+    cmd4+="-ik1 ${bk1} "
+fi
+if [[ ${bk2} ]]; then
+    cmd4+="-ik2 ${bk2} "
+fi
+if [[ ${b1} ]]; then
     cmd4+="-i ${b1} ${b2} "
 fi
 cmd4+="-r $w/3/reads_classifier/found_1.fastq $w/3/reads_classifier/found_2.fastq "
@@ -244,7 +298,13 @@ echo $'@\r\n\r\n+\r\n' >> $w/3/reads_classifier/not_found_2.fastq
 done
 
 cmd5=$cmd
-if [[ ${d1} ]]; then
+if [[ ${bk1} ]]; then
+    cmd5+="-ik1 ${bk1} "
+fi
+if [[ ${bk2} ]]; then
+    cmd5+="-ik2 ${bk2} "
+fi
+if [[ ${b1} ]]; then
     cmd5+="-i ${b1} ${b2} "
 fi
 cmd5+="-r $w/3/reads_classifier/not_found_1.fastq $w/3/reads_classifier/not_found_2.fastq "
@@ -277,7 +337,13 @@ echo $'@\r\n\r\n+\r\n' >> $w/3/reads_classifier/half_found_2.fastq
 done
 
 cmd6=$cmd
-if [[ ${d1} ]]; then
+if [[ ${bk1} ]]; then
+    cmd6+="-ik1 ${bk1} "
+fi
+if [[ ${bk2} ]]; then
+    cmd6+="-ik2 ${bk2} "
+fi
+if [[ ${b1} ]]; then
     cmd6+="-i ${b1} ${b2} "
 fi
 cmd6+="-r $w/3/reads_classifier/half_found_1.fastq $w/3/reads_classifier/half_found_2.fastq "
