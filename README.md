@@ -10,7 +10,7 @@ The implementation is based on [MetaCherchant](https://github.com/ivartb/metache
       * [Results visualisation](#results-visualisation)
     * [Accurate reads classifier](#accurate-reads-classifier)
       * [Output](#output-description-1) 
-  * [Using k-mers for speed up](#speed-up)
+  * [Using k-mers for speed up](#using-k-mers-for-speed-up)
 <!--te-->
 
 ## Installation
@@ -65,9 +65,9 @@ Here is a bash script showing a typical usage of simple reads classifier:
 * `-p` — available processors (optional, default: all)
 * `-interval95` — set the interval width to probability 0.95 (optional)
 * `-v` — enable debug output (optional)
-* `-dk` — one file with donor k-mers in binary form (SEE: [Using k-mers for speed up](#speed-up))
-* `-bk` — one file with pre-FMT recipient k-mers in binary form (SEE: [Using k-mers for speed up](#speed-up))
-* `-ak` — one file with post-FMT recipient k-mers in binary form (SEE: [Using k-mers for speed up](#speed-up))
+* `-dk` — one file with donor k-mers in binary form (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
+* `-bk` — one file with pre-FMT recipient k-mers in binary form (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
+* `-ak` — one file with post-FMT recipient k-mers in binary form (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
 
 #### Output description
 
@@ -202,12 +202,12 @@ Here is a bash script showing a typical usage of accurate reads classifier:
 * `-p` — available processors (optional, default: all)
 * `-interval95` — set the interval width to probability 0.95 (optional)
 * `-v` — enable debug output (optional)
-* `-dk1` — one file with donor k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#speed-up))
-* `-dk2` — one file with donor k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#speed-up))
-* `-bk1` — one file with pre-FMT recipient k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#speed-up))
-* `-bk2` — one file with pre-FMT recipient k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#speed-up))
-* `-ak1` — one file with post-FMT recipient k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#speed-up))
-* `-ak2` — one file with post-FMT recipient k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#speed-up))
+* `-dk1` — one file with donor k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
+* `-dk2` — one file with donor k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
+* `-bk1` — one file with pre-FMT recipient k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
+* `-bk2` — one file with pre-FMT recipient k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
+* `-ak1` — one file with post-FMT recipient k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
+* `-ak2` — one file with post-FMT recipient k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#using-k-mers-for-speed-up))
 
 #### Output description
 
