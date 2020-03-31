@@ -10,6 +10,7 @@ The implementation is based on [MetaCherchant](https://github.com/ivartb/metache
       * [Results visualisation](#results-visualisation)
     * [Accurate reads classifier](#accurate-reads-classifier)
       * [Output](#output-description-1) 
+  * [Using k-mers for speed up](#speed-up)
 <!--te-->
 
 ## Installation
@@ -46,11 +47,14 @@ Here is a bash script showing a typical usage of simple reads classifier:
     -m <mem> \
     -p <proc> \
     -interval95 \
-    -v
+    -v \
+    -dk <donor.kmers.bin> \
+    -bk <before.kmers.bin> \
+    -ak <after.kmers.bin> \
 ~~~
 
 * `-k` — the size of k-mer used in de Bruijn graph
-* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
+* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2 
 * `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
 * `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2
 * `-found` — Minimum coverage breadth for reads from class found \[0 - 100 %\] (optional, default: 90)
@@ -61,6 +65,9 @@ Here is a bash script showing a typical usage of simple reads classifier:
 * `-p` — available processors (optional, default: all)
 * `-interval95` — set the interval width to probability 0.95 (optional)
 * `-v` — enable debug output (optional)
+* `-dk` — one file with donor k-mers in binary form (SEE: [Using k-mers for speed up](#speed-up))
+* `-bk` — one file with pre-FMT recipient k-mers in binary form (SEE: [Using k-mers for speed up](#speed-up))
+* `-ak` — one file with post-FMT recipient k-mers in binary form (SEE: [Using k-mers for speed up](#speed-up))
 
 #### Output description
 
@@ -114,7 +121,7 @@ One can get the visual representation of classified reads mapped back on the de 
 * `-o` — directory for final categories of reads (optional, default: outDir)
 * `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
 * `-p` — available processors (optional, default: all)
-* `-v` — enable debug output (optional)
+* `-v` — enable debug output (optional) 
 
 In the output folder (specified by `-o`) you can find six files:
 
@@ -172,7 +179,13 @@ Here is a bash script showing a typical usage of accurate reads classifier:
     -m <mem> \
     -p <proc> \
     -interval95 \
-    -v
+    -v \
+    -dk1 <donor_k.kmers.bin> \
+    -dk2 <donor_k2.kmers.bin>\
+    -bk1 <before_k.kmers.bin> \
+    -bk2 <before_k2.kmers.bin>\
+    -ak1 <after_k.kmers.bin> \
+    -ak2 <after_k2.kmers.bin>
 ~~~
 
 * `-k` — the size of k-mer used in de Bruijn graph
@@ -189,6 +202,12 @@ Here is a bash script showing a typical usage of accurate reads classifier:
 * `-p` — available processors (optional, default: all)
 * `-interval95` — set the interval width to probability 0.95 (optional)
 * `-v` — enable debug output (optional)
+* `-dk1` — one file with donor k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#speed-up))
+* `-dk2` — one file with donor k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#speed-up))
+* `-bk1` — one file with pre-FMT recipient k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#speed-up))
+* `-bk2` — one file with pre-FMT recipient k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#speed-up))
+* `-ak1` — one file with post-FMT recipient k-mers in binary form with k=**k** (SEE: [Using k-mers for speed up](#speed-up))
+* `-ak2` — one file with post-FMT recipient k-mers in binary form with k=**k2** (SEE: [Using k-mers for speed up](#speed-up))
 
 #### Output description
 
@@ -225,3 +244,29 @@ After the end of the analysis, the results can be found in the folder specified 
   * `strain_from_before_[1|2|s].fastq` — reads which were found in pre-FMT recipient metagenome and close to which were found in donor metagenome
 
   * `strain_itself_[1|2|s].fastq` — reads close to which were found both in donor and pre-FMT recipient metagenome
+
+
+## Using k-mers for speed-up
+
+De Bruijn graphs of k-mers extracted from input reads are utilised multiple times during execution. Thus, it is highly recommended to extract k-mers from reads at preprocession stage and provide files with extracted k-mers in binary format as input parameters. One should use `kmer-counter` tool from `metacherchant.jar` to perform this action.
+
+Here is a command showing usage of the tool:
+
+~~~
+java -jar metacherchant.jar -t kmer-counter \
+    -k 31 \
+    -i <reads_1.fasta reads_2.fasta> \
+    -w <workDir> \
+    -o <outDir> \
+    -m <mem> \
+    -p <proc> \
+    -v
+~~~
+
+* `-k` — the size of k-mer to extract from reads
+* `-i` — two files with paired metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2 
+* `-w` — directory with intermediate working files (optional, default: workDir)
+* `-o` — directory for final categories of reads (optional, default: outDir)
+* `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
+* `-p` — available processors (optional, default: all)
+* `-v` — enable debug output (optional)
