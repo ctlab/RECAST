@@ -2,6 +2,7 @@
 
 o="outDir"
 w="workDir"
+ext="fastq"
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do

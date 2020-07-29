@@ -251,9 +251,9 @@ cmd5+="-w $w/5/"
 echo "$cmd5"
 $cmd5
 if [[ $? -eq 0 ]]; then
-    cp "$w/5/reads_classifier/found_1.fastq" "$o/came_from_before_1.fastq"
-    cp "$w/5/reads_classifier/found_2.fastq" "$o/came_from_before_2.fastq"
-    cp "$w/5/reads_classifier/found_s.fastq" "$o/came_from_before_s.fastq"
+    cp "$w/5/reads_classifier/found_1.fastq" "$o/came_from_baseline_1.fastq"
+    cp "$w/5/reads_classifier/found_2.fastq" "$o/came_from_baseline_2.fastq"
+    cp "$w/5/reads_classifier/found_s.fastq" "$o/came_from_baseline_s.fastq"
     cp "$w/5/reads_classifier/not_found_1.fastq" "$o/came_itself_1.fastq"
     cp "$w/5/reads_classifier/not_found_2.fastq" "$o/came_itself_2.fastq"
     cp "$w/5/reads_classifier/not_found_s.fastq" "$o/came_itself_s.fastq"

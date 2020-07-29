@@ -1,4 +1,4 @@
-The purpose of these tools is to analyse metagenome time series by searching the common parts from one metagenome into another.
+**RECAST (Recipient intestinE Colonisation AnalysiS Tool)** is a tool for analysing metagenome time series and distinguish which reads of one metagenome sample are found in other samples.
 The implementation is based on [MetaCherchant](https://github.com/ivartb/metacherchant) source code.
 
 ## Table of contents
@@ -25,7 +25,7 @@ Scripts have been tested under CentOS release 6.7, but should generally work on 
 Both pipelines were intended to use for analysing human gut microbiota after 
 [fecal microbiota transplantation](https://en.wikipedia.org/wiki/Fecal_microbiota_transplant).
 Thus it takes three metagenome samples (namely: donor sample, pre-FMT recipient sample, and post-FMT recipient sample)
-and split reads from each metagenome on different categories depending on their colonization the recipient's gut.
+and split reads from each metagenome into different categories depending on their colonization of the recipient's gut.
 
 However, pipelines can be used for analysing any metagenome time series, but don't be confused with categories names.
 
@@ -50,7 +50,7 @@ Here is a bash script showing a typical usage of simple reads classifier:
     -v \
     -dk <donor.kmers.bin> \
     -bk <before.kmers.bin> \
-    -ak <after.kmers.bin> \
+    -ak <after.kmers.bin>
 ~~~
 
 * `-k` — the size of k-mer used in de Bruijn graph
@@ -91,18 +91,17 @@ After the end of the analysis, the results can be found in the folder specified 
 
   * `came_from_donor_[1|2|s].fastq` — reads which were found only in donor metagenome
 
-  * `came_from_before_[1|2|s].fastq` — reads which were found only in pre-FMT recipient metagenome
+  * `came_from_baseline_[1|2|s].fastq` — reads which were found only in pre-FMT recipient metagenome
 
   * `came_itself_[1|2|s].fastq` — reads which were not found neither in donor metagenome nor in pre-FMT recipient metagenome
 
 ### Results visualisation
 
-One can get the visual representation of classified reads mapped back on the de Bruijn graphs in tool [Bandage](https://rrwick.github.io/Bandage/). Run `fmt_visualiser.sh` script as in the example below:
+One can get the visual representation of a nucleotide sequence coverage by classified reads in post-FMT de Bruijn graphs in tool [Bandage](https://rrwick.github.io/Bandage/). Run `fmt_visualiser.sh` script as in the example below:
 
 ~~~
 ./fmt_visualiser.sh -k 31 \
-    -d <donor_1.fasta donor_2.fasta> \
-    -b <before_1.fasta before_2.fasta> \
+    -seq <seq.fasta> \
     -a <after_1.fasta after_2.fasta> \
     -i <inputDir> \
     -w <workDir> \
@@ -112,46 +111,29 @@ One can get the visual representation of classified reads mapped back on the de 
     -v
 ~~~
 
-* `-k` — the size of k-mer used in de Bruijn graph (**must** be the **same** as in `reads_classifier.sh`)
-* `-d` — two files with paired donor metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2  (**must** be the **same** as in `reads_classifier.sh`)
-* `-b` — two files with paired pre-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2  (**must** be the **same** as in `reads_classifier.sh`)
-* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2  (**must** be the **same** as in `reads_classifier.sh`)
+* `-k` — the size of k-mer used in de Bruijn graph (must be the **same** as in `reads_classifier.sh`)
+* `-seq` — file with sequences to visualise in FASTA format
+* `-a` — two files with paired post-FMT recipient metagenomic reads. FASTA and FASTQ formats are supported, as well as compressed files *.gz or *.bz2  (must be the **same** as in `reads_classifier.sh`)
 * `-i` — directory containing output of `reads_classifier.sh` FMT classification script
 * `-w` — directory with intermediate working files (optional, default: workDir)
-* `-o` — directory for final categories of reads (optional, default: outDir)
+* `-o` — directory for final visualisation files (optional, default: outDir)
 * `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
 * `-p` — available processors (optional, default: all)
 * `-v` — enable debug output (optional) 
 
-In the output folder (specified by `-o`) you can find six files:
+In the output folder (specified by `-o`) you can find files:
 
-* `*.fasta` — three fasta files containing merged nodes for graphs of donor, pre-FMT and post-FMT recipient with information about neighbors in description line
+* `*.fasta` — fasta files containing merged nodes for graph of post-FMT recipient around sequences with information about neighbors in description line
 
-* `*.gfa` — three files of donor, pre-FMT and post-FMT graphs in [GFA format](https://github.com/GFA-spec/GFA-spec/blob/master/GFA-spec.md) accepted by Bandage as input files. Follow the instructions of Bandage tool to get the colorful visualisation of classification results.
+* `*.gfa` — files of post-FMT graphs around sequences in [GFA format](https://github.com/GFA-spec/GFA-spec/blob/master/GFA-spec.md) accepted by Bandage as input files. Follow the instructions of Bandage tool to get the colorful visualisation of classification results.
 
-**Donor graph (`donor.gfa`)** is colored with three colors:
-
-![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `settle`
-
-![](https://via.placeholder.com/15/0000ff?text=+) blue nodes — parts of graph, which classified as `not settle`
-
-![](https://via.placeholder.com/15/999999?text=+) grey nodes — parts of graph, which are covered by both categories
-
-**Pre-FMT recipient graph (`before.gfa`)** is colored with three colors:
-
-![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `stay`
-
-![](https://via.placeholder.com/15/0000ff?text=+) blue nodes — parts of graph, which classified as `gone`
-
-![](https://via.placeholder.com/15/999999?text=+) grey nodes — parts of graph, which are covered by both categories
-
-**Post-FMT recipient graph (`after.gfa`)** is colored with five colors:
+**Post-FMT recipient graphs (`after/*.gfa`)** are colored with five colors:
 
 ![](https://via.placeholder.com/15/008000?text=+) green nodes — parts of graph, which classified as `came from both`
 
 ![](https://via.placeholder.com/15/ff0000?text=+) red nodes — parts of graph, which classified as `came from donor`
 
-![](https://via.placeholder.com/15/0000ff?text=+) blue nodes — parts of graph, which classified as `came from before`
+![](https://via.placeholder.com/15/0000ff?text=+) blue nodes — parts of graph, which classified as `came from baseline`
 
 ![](https://via.placeholder.com/15/ffff00?text=+) yellow nodes — parts of graph, which classified as `came itself`
 
@@ -161,7 +143,7 @@ In the output folder (specified by `-o`) you can find six files:
 ### Accurate reads classifier
 
 Accurate reads classifier uses soft splitting criteria providing a user with thirteen categories of reads.
-It also utilizes two values of `k` for building de Bruijn graph, which makes an algorithm be more accurate.
+It also utilizes two values of `k` for building de Bruijn graph, which makes an algorithm to be more accurate.
 
 Here is a bash script showing a typical usage of accurate reads classifier:
 
@@ -235,13 +217,13 @@ After the end of the analysis, the results can be found in the folder specified 
 
   * `came_from_donor_[1|2|s].fastq` — reads which were found only in donor metagenome
 
-  * `came_from_before_[1|2|s].fastq` — reads which were found only in pre-FMT recipient metagenome
+  * `came_from_baseline_[1|2|s].fastq` — reads which were found only in pre-FMT recipient metagenome
 
   * `came_itself_[1|2|s].fastq` — reads which were not found neither in donor metagenome nor in pre-FMT recipient metagenome
 
   * `strain_from_donor_[1|2|s].fastq` — reads which were found in donor metagenome and close to which were found in pre-FMT recipient metagenome
 
-  * `strain_from_before_[1|2|s].fastq` — reads which were found in pre-FMT recipient metagenome and close to which were found in donor metagenome
+  * `strain_from_baseline_[1|2|s].fastq` — reads which were found in pre-FMT recipient metagenome and close to which were found in donor metagenome
 
   * `strain_itself_[1|2|s].fastq` — reads close to which were found both in donor and pre-FMT recipient metagenome
 
