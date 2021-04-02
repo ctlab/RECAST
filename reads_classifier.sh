@@ -1,5 +1,7 @@
 #!/bin/bash
 
+pwd=`dirname "$0"`
+
 o="outDir"
 w="workDir"
 POSITIONAL=()
@@ -100,7 +102,7 @@ cmd="java "
 if [[ $m ]]; then
     cmd+="-Xmx${m} -Xms${m} "
 fi
-cmd+="-jar metacherchant.jar -t reads-classifier "
+cmd+="-jar ${pwd}/metacherchant.jar -t reads-classifier "
 if [[ $k ]]; then
     cmd+="-k $k "
 fi
