@@ -11,6 +11,7 @@ The implementation is based on [MetaCherchant](https://github.com/ivartb/metache
     * [Accurate reads classifier](#accurate-reads-classifier)
       * [Output](#output-description-1) 
   * [Using k-mers for speed up](#using-k-mers-for-speed-up)
+  * [Citation](#citation)
 <!--te-->
 
 ## Installation
@@ -252,3 +253,10 @@ java -jar metacherchant.jar -t kmer-counter \
 * `-m` — memory to use (for example: 1500M, 4G, etc.) (optional, default: 2 Gb)
 * `-p` — available processors (optional, default: all)
 * `-v` — enable debug output (optional)
+
+
+## Citation
+
+If you use RECAST in your research, please cite the following publication:
+
+Olekhnovich, E. I., Ivanov, A. B., Ulyantsev, V. I., & Ilina, E. N. (2021). Separation of Donor and Recipient Microbial Diversity Allows Determination of Taxonomic and Functional Features of Gut Microbiota Restructuring following Fecal Transplantation. Msystems, 6(4), e00811-21. [https://doi.org/10.1128/mSystems.00811-21](https://doi.org/10.1128/mSystems.00811-21)
